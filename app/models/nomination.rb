@@ -199,7 +199,7 @@ class Nomination < Model
       a_document.save! unless a_document.persisted?
       a_team_member = TeamMember.sample_chair
       a_team_member.save! unless a_team_member.persisted?
-      sample_object = self.find_by(nominatable_id: a_document.id, team_member_id: a_team_member.id)
+      sample_object = self.find_by(nominatable_id: a_document.id, nominatable_type: a_document.dao_class.to_s, team_member_id: a_team_member.id)
       return sample_object if sample_object.present?
       a_document.nominate(a_team_member)
     end
@@ -209,7 +209,7 @@ class Nomination < Model
       a_project.save! unless a_project.persisted?
       a_team_member = TeamMember.sample_chair
       a_team_member.save! unless a_team_member.persisted?
-      sample_object = self.find_by(nominatable_id: a_project.id, team_member_id: a_team_member.id)
+      sample_object = self.find_by(nominatable_id: a_project.id, nominatable_type: a_project.dao_class.to_s, team_member_id: a_team_member.id)
       return sample_object if sample_object.present?
       a_project.nominate(a_team_member)
     end
