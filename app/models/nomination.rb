@@ -160,7 +160,7 @@ class Nomination < Model
   # CONVERSION
 
   def as_json(options = nil)
-    {id: id, status: status_type, nomination_date: nomination_date, comments: comments, team_member_id: team_member.id, nominatable_id: nominatable.id}.as_json
+    {id: id, status: status_type, nomination_date: nomination_date, comments: comments, team_member_id: team_member.id, nominatable_id: nominatable.id, nominatable_type: nominatable.class.to_s}.as_json
   end
 
   # PREDICATES
