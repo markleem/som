@@ -7,7 +7,7 @@ class Nomination < Model
   attr_reader :comments
   attr_reader :nomination_date
   attr_reader :team_member
-  attr_reader :document
+  attr_reader :nominatable
 
   STATUS_APPROVED = :approved.freeze
   STATUS_IN_REVIEW = :in_review.freeze
@@ -31,14 +31,14 @@ class Nomination < Model
 
   # INITIALIZATION
 
-  def initialize(a_team_member, a_document)
+  def initialize(a_team_member, a_nominatable)
     super()
     do_set_comments("")
     set_status_pending
     @nomination_date = Date.today
     add_team_member(a_team_member)
     begin
-      add_document(a_document)
+      add_nominatable(a_nominatable)
     rescue BusinessRuleError => e
       a_team_member.do_remove_nomination(self)
       raise(e)
@@ -105,11 +105,11 @@ class Nomination < Model
     a_team_member.do_add_nomination(self)
   end
 
-  def add_document(a_document)
-    test_add_document(a_document)
-    a_document.test_add_nomination(self)
-    do_add_document(a_document)
-    a_document.do_add_nomination(self)
+  def add_nominatable(a_nominatable)
+    test_add_nominatable(a_nominatable)
+    a_nominatable.test_add_nomination(self)
+    do_add_nominatable(a_nominatable)
+    a_nominatable.do_add_nomination(self)
   end
 
   # COLLABORATION - RULES
@@ -121,20 +121,20 @@ class Nomination < Model
     if team_member.present?
       raise(BusinessRuleError, "Team member already exists")
     end
-    unless document.nil?
-      document.test_add_team_member_conflict(a_team_member)
+    unless nominatable.nil?
+      nominatable.test_add_team_member_conflict(a_team_member)
     end
   end
 
-  def test_add_document(a_document)
-    if a_document.nil?
-      raise(BusinessRuleError, "Document cannot be nil")
+  def test_add_nominatable(a_nominatable)
+    if a_nominatable.nil?
+      raise(BusinessRuleError, "Nominatable cannot be nil")
     end
-    if document.present?
-      raise(BusinessRuleError, "Document already exists")
+    if nominatable.present?
+      raise(BusinessRuleError, "Nominatable already exists")
     end
     unless team_member.nil?
-      a_document.test_add_team_member_conflict(team_member)
+      a_nominatable.test_add_team_member_conflict(team_member)
     end
   end
 
@@ -144,8 +144,8 @@ class Nomination < Model
     @team_member = a_team_member
   end
 
-  def do_add_document(a_document)
-    @document = a_document
+  def do_add_nominatable(a_nominatable)
+    @nominatable = a_nominatable
   end
 
   # ERADICATION - RULES
@@ -160,7 +160,7 @@ class Nomination < Model
   # CONVERSION
 
   def as_json(options = nil)
-    {id: id, status: status_type, nomination_date: nomination_date, comments: comments, team_member_id: team_member.id, document_id: document.id}.as_json
+    {id: id, status: status_type, nomination_date: nomination_date, comments: comments, team_member_id: team_member.id, nominatable_id: nominatable.id}.as_json
   end
 
   # PREDICATES
@@ -180,7 +180,7 @@ class Nomination < Model
   # COMPARING
 
   def hash
-    [do_get_status, nomination_date, comments, team_member, document].hash
+    [do_get_status, nomination_date, comments, team_member, nominatable].hash
   end
 
   # PRINTING
@@ -194,14 +194,24 @@ class Nomination < Model
   # CLASS - SAMPLE OBJECTS
 
   unless Rails.env.production?
-    def self.sample_nomination
+    def self.sample_document_nomination
       a_document = Document.sample_normal
       a_document.save! unless a_document.persisted?
       a_team_member = TeamMember.sample_chair
       a_team_member.save! unless a_team_member.persisted?
-      sample_object = self.find_by(document_id: a_document.id, team_member_id: a_team_member.id)
+      sample_object = self.find_by(nominatable_id: a_document.id, team_member_id: a_team_member.id)
       return sample_object if sample_object.present?
       a_document.nominate(a_team_member)
+    end
+
+    def self.sample_project_nomination
+      a_project = Project.sample_normal
+      a_project.save! unless a_project.persisted?
+      a_team_member = TeamMember.sample_chair
+      a_team_member.save! unless a_team_member.persisted?
+      sample_object = self.find_by(nominatable_id: a_project.id, team_member_id: a_team_member.id)
+      return sample_object if sample_object.present?
+      a_project.nominate(a_team_member)
     end
   end
 
@@ -225,7 +235,7 @@ class Nomination < Model
 
   def do_eradicate
     super
-    document.do_remove_nomination(self)
+    nominatable.do_remove_nomination(self)
     team_member.do_remove_nomination(self)
   end
 
@@ -233,7 +243,7 @@ class Nomination < Model
 
   def constructed?
     return false unless team_member.present?
-    return false unless document.present?
+    return false unless nominatable.present?
     true
   end
 
@@ -245,7 +255,7 @@ class Nomination < Model
     @nomination_date = @dao.nomination_date
     @comments = @dao.comments
     @team_member = @dao.team_member.model
-    @document = @dao.document.model
+    @nominatable = @dao.nominatable.model
   end
 
   def save_to_dao
@@ -254,6 +264,6 @@ class Nomination < Model
     @dao.nomination_date = @nomination_date
     @dao.comments = @comments
     @dao.team_member = @team_member.my_dao
-    @dao.document = @document.my_dao
+    @dao.nominatable = @nominatable.my_dao
   end
 end

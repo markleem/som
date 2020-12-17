@@ -24,8 +24,6 @@ class NominationTest < MiniTest::Unit::TestCase
     a_nomination.reload
     assert(a_nomination.persisted?)
     assert(a_nomination.is_status_pending?)
-    assert(a_nomination.is_before?(Date.tomorrow))
-    assert(a_nomination.is_after?(Date.yesterday))
     assert_equal(a_nomination.class_name, "Nomination")
     refute_empty(Nomination.all)
   end
@@ -53,7 +51,7 @@ class NominationTest < MiniTest::Unit::TestCase
   end
 
   def test_adding_team_member_to_existing_nomination
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_team_member = TeamMember.sample_secret
     a_team_member.save!
@@ -61,36 +59,36 @@ class NominationTest < MiniTest::Unit::TestCase
   end
 
   def test_adding_document_to_existing_nomination
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_document = Document.sample_secret
     a_document.save!
-    assert_raises(BusinessRuleError) { a_nomination.add_document(a_document) }
+    assert_raises(BusinessRuleError) { a_nomination.add_nominatable(a_document) }
   end
 
   def test_good_eradication
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_nomination.eradicate
     assert_raises(BusinessRuleError) { a_nomination.save! }
   end
 
   def test_eradication_of_approved_nomination
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.set_status_approved
     a_nomination.save!
     assert_raises(BusinessRuleError) { a_nomination.eradicate }
   end
 
   def test_eradication_of_rejected_nomination
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.set_status_rejected
     a_nomination.save!
     assert_raises(BusinessRuleError) { a_nomination.eradicate }
   end
 
   def test_statuses
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     assert(a_nomination.is_status_pending?)
     a_nomination.set_status_in_review
@@ -102,7 +100,7 @@ class NominationTest < MiniTest::Unit::TestCase
   end
 
   def test_equals
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_team_member = a_nomination.team_member
     a_team_member.security_level.set_level_secret
@@ -115,12 +113,12 @@ class NominationTest < MiniTest::Unit::TestCase
   end
 
   def test_to_s
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     assert_match(/Nomination/, a_nomination.to_s)
   end
 
   def test_as_json
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     refute_empty(a_nomination.as_json)
   end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module DAO
-  # class Document
-  class Document < Model
-    self.table_name = "documents"
+  # class Project
+  class Project < Model
+    self.table_name = "projects"
 
     def self.model_class
-      ::Document
+      ::Project
     end
 
     has_many :nominations, as: :nominatable, inverse_of: :nominatable

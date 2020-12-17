@@ -87,7 +87,7 @@ class TeamMemberTest < MiniTest::Unit::TestCase
   end
 
   def test_getting_nominations
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_team_member = a_nomination.team_member
     a_team_member.reload
@@ -108,7 +108,7 @@ class TeamMemberTest < MiniTest::Unit::TestCase
   end
 
   def test_eradication_with_nominations
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
     a_team_member = a_nomination.team_member
     assert_raises(BusinessRuleError) { a_team_member.eradicate }

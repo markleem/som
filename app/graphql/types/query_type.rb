@@ -67,6 +67,22 @@ module Types
       Document.find(id)
     end
 
+    # Project
+
+    field :projects, [Types::ProjectType], null: false
+
+    def projects
+      Projects.all
+    end
+
+    field :project, Types::DocumentType, null: false do
+      argument :id, ID, required: true
+    end
+
+    def project(id:)
+      Project.find(id)
+    end
+
     # Nomination
 
     field :nominations, [Types::NominationType], null: false

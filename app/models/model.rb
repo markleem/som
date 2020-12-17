@@ -31,6 +31,13 @@ class Model
     @dao = nil
   end
 
+  def reload
+    initialize_from_dao unless @dao.nil?
+    self
+  end
+
+  # INITIALIZATION - AUTHORIZED OBJECTS ONLY
+
   def establish_dao(a_dao)
     raise(BusinessRuleError, "Data Access Object is nil") if a_dao.nil?
     raise(BusinessRuleError, "Data Access Object already set") if @dao.present?
@@ -38,11 +45,6 @@ class Model
     @dao = a_dao
     @dao.model = self
     initialize_from_dao
-    self
-  end
-
-  def reload
-    initialize_from_dao unless @dao.nil?
     self
   end
 

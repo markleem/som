@@ -61,27 +61,27 @@ class DocumentTest < MiniTest::Unit::TestCase
   end
 
   def test_getting_nominations
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     a_document.reload
     assert(a_document.has_nomination?(a_nomination))
     refute_empty(a_document.nominations)
   end
 
   def test_not_nominated_before_publish
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     a_document.reload
     assert_raises(BusinessRuleError) { a_document.approved_nomination }
     assert_raises(BusinessRuleError) { a_document.publish }
   end
 
   def test_unresolved_nominations_before_publish
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     a_document.reload
     assert(a_document.has_unresolved_nominations?)
     a_team_member = TeamMember.sample_secret
@@ -90,9 +90,9 @@ class DocumentTest < MiniTest::Unit::TestCase
   end
 
   def test_good_publish
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     a_document.reload
     assert(a_document.is_unpublished?)
     a_nomination.set_status_approved
@@ -102,10 +102,10 @@ class DocumentTest < MiniTest::Unit::TestCase
   end
 
   def test_nomination_after_publish
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.set_status_approved
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     a_document.publish
     a_document.save!
     a_team_member = TeamMember.sample_secret
@@ -128,9 +128,9 @@ class DocumentTest < MiniTest::Unit::TestCase
   end
 
   def test_eradication_with_nominations
-    a_nomination = Nomination.sample_nomination
+    a_nomination = Nomination.sample_document_nomination
     a_nomination.save!
-    a_document = a_nomination.document
+    a_document = a_nomination.nominatable
     assert_raises(BusinessRuleError) { a_document.eradicate }
   end
 

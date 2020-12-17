@@ -27,11 +27,12 @@ ActiveRecord::Schema.define(version: 2020_05_05_165025) do
     t.string "status"
     t.date "nomination_date"
     t.text "comments"
-    t.bigint "document_id", null: false
+    t.string "nominatable_type", null: false
+    t.bigint "nominatable_id", null: false
     t.bigint "team_member_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["document_id"], name: "index_nominations_on_document_id"
+    t.index ["nominatable_type", "nominatable_id"], name: "index_nominations_on_nominatable_type_and_nominatable_id"
     t.index ["team_member_id"], name: "index_nominations_on_team_member_id"
   end
 
@@ -39,6 +40,13 @@ ActiveRecord::Schema.define(version: 2020_05_05_165025) do
     t.string "name"
     t.string "title"
     t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "title"
+    t.integer "security_level"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -62,7 +70,6 @@ ActiveRecord::Schema.define(version: 2020_05_05_165025) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "nominations", "documents"
   add_foreign_key "nominations", "team_members"
   add_foreign_key "team_members", "people"
   add_foreign_key "team_members", "teams"
