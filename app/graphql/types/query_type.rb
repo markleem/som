@@ -72,10 +72,10 @@ module Types
     field :projects, [Types::ProjectType], null: false
 
     def projects
-      Projects.all
+      Project.all
     end
 
-    field :project, Types::DocumentType, null: false do
+    field :project, Types::ProjectType, null: false do
       argument :id, ID, required: true
     end
 
