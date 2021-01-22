@@ -109,9 +109,6 @@ class Person < Model
 
   # PREDICATES
 
-  def acts_like_person?
-  end
-
   def has_valid_email?
     email.present?
   end

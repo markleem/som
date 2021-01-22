@@ -135,9 +135,6 @@ class Team < Model
 
   # PREDICATES
 
-  def acts_like_team?
-  end
-
   # COMPARING
 
   def hash

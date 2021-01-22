@@ -91,12 +91,6 @@ class Project < Model
 
   # PREDICATES
 
-  def acts_like_nominatable?
-  end
-
-  def acts_like_project?
-  end
-
   def has_nomination?(a_nomination)
     nominations.include?(a_nomination)
   end
@@ -113,6 +107,10 @@ class Project < Model
 
   def hash
     [title, security_level].hash
+  end
+
+  def species
+    :Nominatable
   end
 
   # PRINTING

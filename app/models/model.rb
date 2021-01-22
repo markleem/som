@@ -103,6 +103,10 @@ class Model
 
   # PREDICATES
 
+  def species?(aSpecies)
+    species == aSpecies
+  end
+
   def persisted?
     return false if @dao.nil?
     @dao.persisted?
@@ -121,6 +125,10 @@ class Model
 
   def hash
     raise(NotImplementedError, "#{self.class.name}#hash is an abstract model method")
+  end
+
+  def species
+    self.class_name.to_sym
   end
 
   # PRINTING

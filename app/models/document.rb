@@ -101,12 +101,6 @@ class Document < Model
 
   # PREDICATES
 
-  def acts_like_nominatable?
-  end
-
-  def acts_like_document?
-  end
-
   def has_nomination?(a_nomination)
     nominations.include?(a_nomination)
   end
@@ -131,6 +125,10 @@ class Document < Model
 
   def hash
     [title, publication_date, security_level].hash
+  end
+
+  def species
+    :Nominatable
   end
 
   # PRINTING

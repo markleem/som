@@ -113,7 +113,7 @@ class TeamMember < Model
     if a_team.nil?
       raise(BusinessRuleError, "Team cannot be nil")
     end
-    unless a_team.acts_like?(:team)
+    unless a_team.species?(:Team)
       raise(BusinessRuleError, "Team is wrong type")
     end
     test_add_team(a_team)
@@ -126,7 +126,7 @@ class TeamMember < Model
     if a_person.nil?
       raise(BusinessRuleError, "Person cannot be nil")
     end
-    unless a_person.acts_like?(:person)
+    unless a_person.species?(:Person)
       raise(BusinessRuleError, "Person is wrong type")
     end
     test_add_person(a_person)
@@ -211,9 +211,6 @@ class TeamMember < Model
   end
 
   # PREDICATES
-
-  def acts_like_team_member?
-  end
 
   def has_valid_email?
     person&.has_valid_email?

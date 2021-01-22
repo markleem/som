@@ -102,7 +102,7 @@ class Nomination < Model
     if a_team_member.nil?
       raise(BusinessRuleError, "Team Member cannot be nil")
     end
-    unless a_team_member.acts_like?(:team_member)
+    unless a_team_member.species?(:TeamMember)
       raise(BusinessRuleError, "Team Member is wrong type")
     end
     test_add_team_member(a_team_member)
@@ -115,7 +115,7 @@ class Nomination < Model
     if a_nominatable.nil?
       raise(BusinessRuleError, "Nominatable cannot be nil")
     end
-    unless a_nominatable.acts_like?(:nominatable)
+    unless a_nominatable.species?(:Nominatable)
       raise(BusinessRuleError, "Nominatable is wrong type")
     end
     test_add_nominatable(a_nominatable)
@@ -170,9 +170,6 @@ class Nomination < Model
   end
 
   # PREDICATES
-
-  def acts_like_nomination?
-  end
 
   def is_before?(a_date)
     nomination_date < a_date
