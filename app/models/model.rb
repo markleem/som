@@ -103,8 +103,8 @@ class Model
 
   # PREDICATES
 
-  def species?(aSpecies)
-    species == aSpecies
+  def species?(a_species)
+    species == a_species
   end
 
   def persisted?
