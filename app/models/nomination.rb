@@ -99,6 +99,12 @@ class Nomination < Model
   # COLLABORATION - ACCESSING
 
   def add_team_member(a_team_member)
+    if a_team_member.nil?
+      raise(BusinessRuleError, "Team Member cannot be nil")
+    end
+    unless a_team_member.acts_like?(:team_member)
+      raise(BusinessRuleError, "Team Member is wrong type")
+    end
     test_add_team_member(a_team_member)
     a_team_member.test_add_nomination(self)
     do_add_team_member(a_team_member)
@@ -106,6 +112,12 @@ class Nomination < Model
   end
 
   def add_nominatable(a_nominatable)
+    if a_nominatable.nil?
+      raise(BusinessRuleError, "Nominatable cannot be nil")
+    end
+    unless a_nominatable.acts_like?(:nominatable)
+      raise(BusinessRuleError, "Nominatable is wrong type")
+    end
     test_add_nominatable(a_nominatable)
     a_nominatable.test_add_nomination(self)
     do_add_nominatable(a_nominatable)
@@ -115,9 +127,6 @@ class Nomination < Model
   # COLLABORATION - RULES
 
   def test_add_team_member(a_team_member)
-    if a_team_member.nil?
-      raise(BusinessRuleError, "Team Member cannot be nil")
-    end
     if team_member.present?
       raise(BusinessRuleError, "Team member already exists")
     end
@@ -127,9 +136,6 @@ class Nomination < Model
   end
 
   def test_add_nominatable(a_nominatable)
-    if a_nominatable.nil?
-      raise(BusinessRuleError, "Nominatable cannot be nil")
-    end
     if nominatable.present?
       raise(BusinessRuleError, "Nominatable already exists")
     end
@@ -164,6 +170,9 @@ class Nomination < Model
   end
 
   # PREDICATES
+
+  def acts_like_nomination?
+  end
 
   def is_before?(a_date)
     nomination_date < a_date

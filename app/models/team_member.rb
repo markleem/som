@@ -110,6 +110,12 @@ class TeamMember < Model
   # COLLABORATION - ACCESSING
 
   def add_team(a_team)
+    if a_team.nil?
+      raise(BusinessRuleError, "Team cannot be nil")
+    end
+    unless a_team.acts_like?(:team)
+      raise(BusinessRuleError, "Team is wrong type")
+    end
     test_add_team(a_team)
     a_team.test_add_team_member(self)
     do_add_team(a_team)
@@ -117,6 +123,12 @@ class TeamMember < Model
   end
 
   def add_person(a_person)
+    if a_person.nil?
+      raise(BusinessRuleError, "Person cannot be nil")
+    end
+    unless a_person.acts_like?(:person)
+      raise(BusinessRuleError, "Person is wrong type")
+    end
     test_add_person(a_person)
     a_person.test_add_team_member(self)
     do_add_person(a_person)
@@ -130,9 +142,6 @@ class TeamMember < Model
   # COLLABORATION - RULES
 
   def test_add_team(a_team)
-    if a_team.nil?
-      raise(BusinessRuleError, "Team cannot be nil")
-    end
     if team.present?
       raise(BusinessRuleError, "Team member already has a team")
     end
@@ -142,9 +151,6 @@ class TeamMember < Model
   end
 
   def test_add_person(a_person)
-    if a_person.nil?
-      raise(BusinessRuleError, "Person cannot be nil")
-    end
     if person.present?
       raise(BusinessRuleError, "Team member already has a person")
     end
@@ -205,6 +211,9 @@ class TeamMember < Model
   end
 
   # PREDICATES
+
+  def acts_like_team_member?
+  end
 
   def has_valid_email?
     person&.has_valid_email?

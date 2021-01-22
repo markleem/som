@@ -46,10 +46,22 @@ class TeamMemberTest < MiniTest::Unit::TestCase
     assert_raises(BusinessRuleError) { TeamMember.new(nil, a_team) }
   end
 
+  def test_bad_construction_with_wrong_type_person
+    a_team = Team.sample_single_chair_team
+    a_team.save!
+    assert_raises(BusinessRuleError) { TeamMember.new(a_team, a_team) }
+  end
+
   def test_bad_construction_with_nil_team
     a_person = Person.sample_person_alfred_with_email
     a_person.save!
     assert_raises(BusinessRuleError) { TeamMember.new(a_person, nil) }
+  end
+
+  def test_bad_construction_with_wrong_type_team
+    a_person = Person.sample_person_alfred_with_email
+    a_person.save!
+    assert_raises(BusinessRuleError) { TeamMember.new(a_person, a_person) }
   end
 
   def test_bad_construction_with_person_without_email

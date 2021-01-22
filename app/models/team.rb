@@ -93,9 +93,6 @@ class Team < Model
   # COLLABORATION - RULES
 
   def test_add_team_member(a_team_member)
-    if a_team_member.nil?
-      raise(BusinessRuleError, "Tried to add nil team member")
-    end
     if a_team_member.is_role_chair?
       test_can_be_chair(a_team_member)
     end
@@ -137,6 +134,9 @@ class Team < Model
   end
 
   # PREDICATES
+
+  def acts_like_team?
+  end
 
   # COMPARING
 

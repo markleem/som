@@ -79,9 +79,7 @@ class Person < Model
   # COLLABORATION - RULES
 
   def test_add_team_member(a_team_member)
-    if a_team_member.nil?
-      raise(BusinessRuleError, "Tried to add nil team member")
-    end
+    # this space reserved for future use
   end
 
   # COLLABORATION - AUTHORIZED OBJECTS ONLY
@@ -110,6 +108,9 @@ class Person < Model
   end
 
   # PREDICATES
+
+  def acts_like_person?
+  end
 
   def has_valid_email?
     email.present?

@@ -44,10 +44,22 @@ class NominationTest < MiniTest::Unit::TestCase
     assert_raises(BusinessRuleError) { Nomination.new(nil, a_document) }
   end
 
+  def test_bad_construction_with_wrong_type_team_member
+    a_document = Document.sample_normal
+    a_document.save!
+    assert_raises(BusinessRuleError) { Nomination.new(a_document, a_document) }
+  end
+
   def test_bad_construction_with_nil_document
     a_team_member = TeamMember.sample_chair
     a_team_member.save!
     assert_raises(BusinessRuleError) { Nomination.new(a_team_member, nil) }
+  end
+
+  def test_bad_construction_with_wrong_type_document
+    a_team_member = TeamMember.sample_chair
+    a_team_member.save!
+    assert_raises(BusinessRuleError) { Nomination.new(a_team_member, a_team_member) }
   end
 
   def test_adding_team_member_to_existing_nomination
