@@ -113,9 +113,7 @@ class TeamMember < Model
     if a_team.nil?
       raise(BusinessRuleError, "Team cannot be nil")
     end
-    unless a_team.species?(:Team)
-      raise(BusinessRuleError, "Team is wrong type")
-    end
+    test_team_species(a_team)
     test_add_team(a_team)
     a_team.test_add_team_member(self)
     do_add_team(a_team)
@@ -126,9 +124,7 @@ class TeamMember < Model
     if a_person.nil?
       raise(BusinessRuleError, "Person cannot be nil")
     end
-    unless a_person.species?(:Person)
-      raise(BusinessRuleError, "Person is wrong type")
-    end
+    test_person_species(a_person)
     test_add_person(a_person)
     a_person.test_add_team_member(self)
     do_add_person(a_person)
@@ -141,12 +137,24 @@ class TeamMember < Model
 
   # COLLABORATION - RULES
 
+  def test_team_species(a_team)
+    unless a_team.species?(:Team)
+      raise(BusinessRuleError, "Team is wrong type")
+    end
+  end
+
   def test_add_team(a_team)
     if team.present?
       raise(BusinessRuleError, "Team member already has a team")
     end
     unless person.nil?
       test_add_conflict_between(person, a_team)
+    end
+  end
+
+  def test_person_species(a_person)
+    unless a_person.species?(:Person)
+      raise(BusinessRuleError, "Person is wrong type")
     end
   end
 

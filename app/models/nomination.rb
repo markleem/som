@@ -102,9 +102,7 @@ class Nomination < Model
     if a_team_member.nil?
       raise(BusinessRuleError, "Team Member cannot be nil")
     end
-    unless a_team_member.species?(:TeamMember)
-      raise(BusinessRuleError, "Team Member is wrong type")
-    end
+    test_team_member_species(a_team_member)
     test_add_team_member(a_team_member)
     a_team_member.test_add_nomination(self)
     do_add_team_member(a_team_member)
@@ -115,9 +113,7 @@ class Nomination < Model
     if a_nominatable.nil?
       raise(BusinessRuleError, "Nominatable cannot be nil")
     end
-    unless a_nominatable.species?(:Nominatable)
-      raise(BusinessRuleError, "Nominatable is wrong type")
-    end
+    test_nominatable_species(a_nominatable)
     test_add_nominatable(a_nominatable)
     a_nominatable.test_add_nomination(self)
     do_add_nominatable(a_nominatable)
@@ -126,12 +122,24 @@ class Nomination < Model
 
   # COLLABORATION - RULES
 
+  def test_team_member_species(a_team_member)
+    unless a_team_member.species?(:TeamMember)
+      raise(BusinessRuleError, "Team Member is wrong type")
+    end
+  end
+
   def test_add_team_member(a_team_member)
     if team_member.present?
       raise(BusinessRuleError, "Team member already exists")
     end
     unless nominatable.nil?
       nominatable.test_add_team_member_conflict(a_team_member)
+    end
+  end
+
+  def test_nominatable_species(a_nominatable)
+    unless a_nominatable.species?(:Nominatable)
+      raise(BusinessRuleError, "Nominatable is wrong type")
     end
   end
 
