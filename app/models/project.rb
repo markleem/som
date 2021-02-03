@@ -52,7 +52,7 @@ class Project < Model
 
   # COLLABORATION - RULES
 
-  def test_add_nomination(a_nomination)
+  def test_add_nomination_as_nominatable(a_nomination)
     if has_unresolved_nominations?
       raise(BusinessRuleError, "Project has unresolved nomination")
     end
@@ -66,7 +66,7 @@ class Project < Model
 
   # COLLABORATION - AUTHORIZED OBJECTS ONLY
 
-  def do_add_nomination(a_nomination)
+  def do_add_nomination_as_nominatable(a_nomination)
     nominations << a_nomination
   end
 
@@ -103,14 +103,15 @@ class Project < Model
     nominations.any? { |a_nomination| a_nomination.is_status_approved? }
   end
 
+  def species?(a_species)
+    return true if a_species == :Nominatable
+    super(a_species)
+  end
+
   # COMPARING
 
   def hash
     [title, security_level].hash
-  end
-
-  def species
-    :Nominatable
   end
 
   # PRINTING

@@ -59,7 +59,7 @@ class Document < Model
 
   # COLLABORATION - RULES
 
-  def test_add_nomination(a_nomination)
+  def test_add_nomination_as_nominatable(a_nomination)
     if is_published?
       raise(BusinessRuleError, "Document already published")
     end
@@ -76,7 +76,7 @@ class Document < Model
 
   # COLLABORATION - AUTHORIZED OBJECTS ONLY
 
-  def do_add_nomination(a_nomination)
+  def do_add_nomination_as_nominatable(a_nomination)
     nominations << a_nomination
   end
 
@@ -121,14 +121,15 @@ class Document < Model
     publication_date.blank?
   end
 
+  def species?(a_species)
+    return true if a_species == :Nominatable
+    super(a_species)
+  end
+
   # COMPARING
 
   def hash
     [title, publication_date, security_level].hash
-  end
-
-  def species
-    :Nominatable
   end
 
   # PRINTING

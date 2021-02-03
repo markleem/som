@@ -115,9 +115,9 @@ class Nomination < Model
     end
     test_nominatable_species(a_nominatable)
     test_add_nominatable(a_nominatable)
-    a_nominatable.test_add_nomination(self)
+    a_nominatable.test_add_nomination_as_nominatable(self)
     do_add_nominatable(a_nominatable)
-    a_nominatable.do_add_nomination(self)
+    a_nominatable.do_add_nomination_as_nominatable(self)
   end
 
   # COLLABORATION - RULES
