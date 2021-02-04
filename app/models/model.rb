@@ -137,6 +137,14 @@ class Model
     raise(NotImplementedError, "#{self.class.name}#to_s is an abstract model method")
   end
 
+  # TESTING
+
+  def unless_species_raise_message(a_species, a_message)
+    unless species?(a_species)
+      raise(BusinessRuleError, a_message)
+    end
+  end
+
   # SAVING
 
   def save!

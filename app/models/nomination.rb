@@ -138,9 +138,7 @@ class Nomination < Model
   end
 
   def test_nominatable_species(a_nominatable)
-    unless a_nominatable.species?(:Nominatable)
-      raise(BusinessRuleError, "Nominatable is wrong type")
-    end
+    a_nominatable.unless_species_raise_message(:Nominatable, "Nominatable is wrong type")
   end
 
   def test_add_nominatable(a_nominatable)
